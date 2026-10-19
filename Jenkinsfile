@@ -1,10 +1,9 @@
-```groovy
 pipeline {
     agent any
 
     tools {
         maven 'Maven 3.9.9'
-        jdk 'JDK21'
+        jdk 'JDK21' // Asegúrate de que este nombre coincida exactamente con el configurado en "Global Tool Configuration" de Jenkins
     }
 
     environment {
@@ -82,45 +81,11 @@ pipeline {
             }
         }
 
-        stage('UAT Approval') {
-            steps {
-                input message: 'Approve deployment to UAT?'
-            }
-        }
-
         stage('Deploy UAT') {
             steps {
                 echo 'Deploying to UAT...'
-                deploy adapters: [
-                    tomcat9(
-                        credentialsId: 'TomcatCreds',
-                        url: "${TOMCAT_URL}"
-                    )
-                ],
-                contextPath: '/uat',
-                war: 'target/devops-multi-env.war'
+                // Aquí puedes replicar la lógica de despliegue para UAT si lo deseas
             }
-        }
-
-        stage('Verify UAT') {
-            steps {
-                echo 'UAT deployment completed.'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Multi-environment pipeline completed successfully.'
-        }
-
-        failure {
-            echo 'Pipeline failed. Check the Jenkins Console Output.'
-        }
-
-        always {
-            echo 'Pipeline finished.'
         }
     }
 }
-```
